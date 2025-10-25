@@ -1,142 +1,74 @@
-# 智能灯光控制系统
-
-一个专为树莓派5设计的本地部署智能灯光控制网页应用。
-
-## 功能特性
-
-### 🏠 灯光状态控制
-- **全局控制面板**：一键省电模式、全部开启/关闭
-- **单个灯光控制**：独立开关、亮度调节、状态显示
-- **实时状态监控**：功耗显示、运行时长、异常检测
-
-### 📊 历史规则与数据
-- **安全访问**：密码保护（默认密码：admin123）
-- **数据展示**：规则历史、传感器数据趋势、能耗统计
-- **数据导出**：支持CSV/PDF格式导出
-
-### 🤖 智能规则更新
-- **AI思考过程**：可视化5步思考流程
-- **规则对比**：新旧规则对比确认
-- **本地算法**：无需联网的智能规则生成
-
-### 📱 移动应用连接
-- **设备绑定**：支持蓝牙、二维码、手动输入
-- **连接管理**：最多绑定2台设备
-- **状态监控**：实时连接状态显示
-
-### ⚙️ 系统设置
-- **语音交互**：语音播报、音量调节、语速设置
-- **账户安全**：密码管理、双因素认证
-- **系统偏好**：主题设置、通知偏好、自动备份
-
-## 技术特点
-
-### 🚀 性能优化
-- **轻量级设计**：纯HTML/CSS/JavaScript，无外部依赖
-- **树莓派优化**：减少动画效果，优化DOM操作
-- **本地存储**：使用localStorage保存用户设置
-- **响应式设计**：适配桌面和移动端
-
-### 🔒 安全特性
-- **密码保护**：历史数据页面需要身份验证
-- **尝试限制**：最多5次密码尝试
-- **会话管理**：自动超时锁定机制
-
-### 🎨 用户体验
-- **语音反馈**：关键操作提供语音提示
-- **深色模式**：支持明暗主题切换
-- **直观界面**：简洁易用的控制面板
-
-## 使用方法
-
-### 1. 部署到树莓派
-```bash
-# 将文件复制到树莓派
-scp -r ./* pi@your-pi-ip:/home/pi/smart-light/
-
-# 在树莓派上启动简单HTTP服务器
-cd /home/pi/smart-light
-python3 -m http.server 8080
-```
-
-### 2. 访问系统
-- 在浏览器中打开：`http://your-pi-ip:8080`
-- 或直接在树莓派上打开：`http://localhost:8080`
-
-### 3. 默认设置
-- **历史数据密码**：`admin123`
-- **默认灯光**：5个预设灯光设备
-- **语音功能**：默认启用
-
-## 文件结构
-
-```
-smart_light_new/
-├── index.html          # 主页面文件
-├── styles.css          # 样式文件
-├── script.js           # JavaScript逻辑
-└── README.md           # 说明文档
-```
-
-## 自定义配置
-
-### 修改默认密码
-在 `script.js` 文件中找到：
-```javascript
-const correctPassword = 'admin123'; // 修改这里
-```
-
-### 添加更多灯光设备
-在 `script.js` 的 `AppState.lights` 数组中添加：
-```javascript
-{ id: 6, name: '新设备', location: '位置', isOn: false, brightness: 50, color: '#ffffff' }
-```
-
-### 调整语音设置
-在设置页面中可以：
-- 启用/禁用语音播报
-- 调节音量（0-100%）
-- 设置语速（慢速/正常/快速）
-
-## 浏览器兼容性
-
-- ✅ Chrome 60+
-- ✅ Firefox 55+
-- ✅ Safari 12+
-- ✅ Edge 79+
-
-## 注意事项
-
-1. **性能考虑**：在树莓派上建议使用Chrome或Firefox浏览器
-2. **存储限制**：localStorage有大小限制，定期清理历史数据
-3. **网络要求**：完全本地运行，无需网络连接
-4. **安全提醒**：请及时修改默认密码
-
-## 故障排除
-
-### 页面无法加载
-- 检查文件路径是否正确
-- 确认HTTP服务器正在运行
-- 检查防火墙设置
-
-### 语音功能不工作
-- 确认浏览器支持Web Speech API
-- 检查系统音量设置
-- 尝试刷新页面
-
-### 设置无法保存
-- 检查浏览器localStorage权限
-- 确认磁盘空间充足
-- 尝试清除浏览器缓存
-
-## 更新日志
-
-### v1.0.0 (2024-01-15)
-- 初始版本发布
-- 实现所有核心功能
-- 优化树莓派性能
-- 添加语音交互功能
-
----
-
-**开发说明**：这是一个演示版本，实际部署时请根据具体硬件设备调整灯光控制接口。
+Smart Lighting Control System
+A web-based smart lighting control system with password-protected data access, English interface, and model integration capabilities.
+Features
+Light Control Panel: Real-time control of lights (on/off, brightness adjustment) across multiple rooms
+Password-Protected Data Access: 
+Secure access to historical data with fixed credentials to show how it works:
+Username: password_is_123456
+Password: 123456
+Historical Data Visualization:
+Training data display from training_data.csv
+Brightness trend charts (first week data)
+Energy consumption statistics (daily/weekly/monthly/yearly)
+Model Integration: Connects to custom models to display predicted lighting rules
+Device Management: Pair/unpair mobile devices via Bluetooth, QR code, or manual input
+Energy-Saving Mode: Automatic brightness adjustment to reduce power consumption
+English Interface: All text and voice prompts in English
+Data Export: Export historical data in CSV or PDF format
+File Structure
+plaintext
+SMART_LIGHT_PAGE/                # Project root
+├─ backend/                      # Backend components
+│  ├─ data/                      # Data storage
+│  │  └─ training_data.csv       # Your training data (first week)
+│  ├─ model_api.py               # Model API server (optional)
+│  └─ [other backend files]      # Your existing backend scripts
+├─ index.html                    # Main frontend page
+├─ script.js                     # Main application logic
+├─ styles.css                    # Styling
+└─ tec_requirements.txt          # Technical requirements
+Setup & Usage
+1. Prerequisites
+A modern web browser (Chrome, Firefox, Edge, etc.)
+Python 3.x (for running local server and optional model API)
+2. Basic Setup (No Model Integration)
+Place your training_data.csv in the backend/data/ directory
+Start a local web server from the project root:
+bash
+python -m http.server 8000
+Open your browser and navigate to http://localhost:8000
+3. Full Setup (With Model Integration)
+Complete the basic setup steps above
+Place your model script (e.g., model4.py) in the backend/ directory
+Start the model API server:
+bash
+cd backend
+python model_api.py
+The frontend will automatically connect to the model API at http://localhost:5000
+4. Accessing Protected Data
+Navigate to the "Historical Data" page
+Enter the password 123456 (username is fixed as password_is_123456)
+View your training data, statistics, and model-predicted rules
+Key Components
+Light Control: Adjust individual lights or use global controls (all on/off, energy-saving mode)
+Data Visualization: Automatic rendering of brightness trends and energy statistics
+Model Integration: The system calls http://localhost:5000/api/predict_rule to get lighting rules
+Voice Feedback: English text-to-speech for user actions and system status
+Settings: Customize voice preferences, theme, and other system options
+Troubleshooting
+Training Data Not Loading:
+Verify training_data.csv exists in backend/data/
+Check file permissions and CSV format (ensure first row contains headers)
+The system will automatically use mock data if the file is missing
+Model Connection Issues:
+Ensure the model API server is running
+Verify the API URL in script.js matches your server address
+Check browser console (F12) for connection errors
+Authentication Problems:
+Maximum 5 password attempts before temporary lockout
+Refresh the page to reset login attempts
+Customization
+Modify Model API Endpoint: Change the URL in HistoryData.fetchModelRule() in script.js
+Adjust CSV Path: Update the path in Utils.loadTrainingData() if your CSV is in a different location
+Change Voice Settings: Modify speech parameters in Utils.speak() or via the Settings page
+Update Lighting Configuration: Edit the lights array in AppState to match your physical setup
