@@ -1,0 +1,315 @@
+## 智能家居控制系统 - 页面结构设计
+
+### 整体导航结构
+```
+应用入口 → 欢迎页面 → 主功能页面（5个核心模块）
+```
+
+---
+
+### 页面1: Check Light Status (灯光状态检查)
+**功能概述：实时灯光监控与控制中心**
+
+**核心功能区块：**
+- **全局控制面板**
+  - 一键开启"省电模式"：所有灯光亮度降低30%
+  - 一键全部关闭：立即关闭所有灯光
+  - 一键全部打开：恢复所有灯光到默认状态
+
+- **单个灯光控制**
+  - 灯光列表：显示每个灯的名称、位置、当前状态
+  - 独立开关：每个灯光可单独开启/关闭
+  - 亮度调节：支持滑动条调节单个灯光亮度
+  - 颜色调节：支持色温/RGB调节（如支持）
+
+- **状态显示**
+  - 实时功耗显示
+  - 灯光使用时长统计
+  - 异常状态警报（如灯泡故障）
+
+---
+
+### 页面2: History Rules and Data (历史规则与数据)
+**安全访问：需要身份验证**
+
+**访问控制：**
+- 密码验证或面部识别解锁
+- 失败尝试次数限制（最多5次）
+- 会话超时自动锁定
+
+**数据展示区域：**
+- **历史规则记录**
+  - 规则变更时间线
+  - 规则生效/失效记录
+  - 规则修改原因说明
+
+- **数据历史**
+  - 传感器数据趋势图（温度、光照、运动等）
+  - 灯光使用模式分析
+  - 能耗统计报告
+  - 数据保留策略：自动删除一年前的历史数据
+
+- **导出功能**
+  - 支持数据导出为CSV/PDF
+  - 自定义时间范围数据下载
+
+---
+
+### 页面3: Renew the Rules (规则更新)
+**默认进入页面 - 智能规则管理中心**
+
+**主显示区域：**
+- **当前生效规则**
+  - 规则内容详细描述
+  - 最后更新时间戳
+  - 规则生效状态指示器
+
+- **规则更新流程**
+  - "Renew"按钮触发智能规则更新
+  - 悬浮窗口显示"AI大脑思考过程"
+  - 思考过程可视化：
+    ```
+    步骤1: 分析近一周环境数据...
+    步骤2: 识别用户行为模式...
+    步骤3: 评估当前规则效果...
+    步骤4: 生成优化建议...
+    步骤5: 制定新规则策略...
+    ```
+  - 实时显示思考进度和中间结论
+
+- **规则确认**
+  - 显示新规则与旧规则对比
+  - 用户确认或拒绝应用新规则
+  - 可手动调整AI建议的规则
+
+---注意：这是一个本地算法模型（暂时没有定好用哪个），不需要联网。
+
+### 页面4: Link to Your Mobile App (移动应用连接)
+**设备绑定管理**
+
+**连接状态显示：**
+- 当前已绑定设备列表
+- 设备名称、连接时间、最后活跃时间
+- 连接方式标识（蓝牙/Wi-Fi）
+
+**绑定限制管理：**
+- 最大绑定数量：2台设备
+- 绑定操作：
+  - 添加新设备按钮
+  - 移除已绑定设备
+  - 设备重命名功能
+
+**连接方式选项：**
+- 蓝牙配对连接
+- 二维码扫描连接
+- 手动输入设备码连接
+
+**连接状态监控：**
+- 实时连接质量指示
+- 断线自动重连机制
+- 设备离线提醒
+
+---
+
+### 页面5: Settings (系统设置)
+**个性化配置中心**
+
+**语音交互设置：**
+- **自动语音播报**
+  - 总开关：启用/禁用语音播报
+  - 播报场景选择：
+    - 规则更新时播报
+    - 设备状态变化时播报
+    - 异常警报时播报
+  - 语音音量调节
+  - 语音语速设置
+
+- **语音识别设置**
+  - 自动识别用户语音响应
+  - 语音唤醒词设置
+  - 语音指令灵敏度调节
+  - 语音反馈确认开关
+
+**账户与安全：**
+- 个人资料管理
+  - 用户名、头像设置
+  - 联系方式更新
+- 密码管理
+  - 修改登录密码
+  - 密码强度要求设置
+  - 双因素认证选项
+
+**系统偏好：**
+- 主题设置（明暗模式）
+- 通知偏好设置
+- 数据自动备份选项
+- 系统日志查看
+
+---
+
+### 全局功能特性
+- **思考过程记录**：所有AI决策必须附带思考过程说明
+- **语音引导**：关键操作提供语音提示和确认
+- **状态持久化**：用户设置和偏好本地保存
+- **响应式设计**：适配桌面和移动端显示
+
+这个设计明确了每个页面的核心功能和用户交互流程，为代码实现提供了清晰的指导框架。
+
+
+--------------------Translate to English-------------------
+## Smart Home Control System - Page Structure Design
+
+### Overall Navigation Structure
+```
+Application Portal → Welcome Page → Main Function Page (5 Core Modules)
+```
+
+---
+### Page 1: Check Light Status
+**Function Overview: Real-time Light Monitoring and Control Center**
+
+**Core Functional Areas:**
+- **Global Control Panel**
+- One-click "Energy Saving Mode": Reduces the brightness of all lights by 30%
+- One-click "Off All": Immediately turns off all lights
+- One-click "On All": Restores all lights to their default state
+
+- **Individual Light Control**
+- Light List: Displays the name, location, and current status of each light
+- Individual Switches: Each light can be turned on/off individually
+- Brightness Adjustment: Supports sliders to adjust the brightness of individual lights
+- Color Adjustment: Supports color temperature/RGB adjustment (if supported)
+
+- **Status Display**
+- Real-time power consumption display
+- Light usage statistics
+- Abnormal status alerts (e.g., bulb failure)
+
+---
+
+### Page 2: History Rules and Data
+**Security Access: Authentication Required**
+
+**Access Control:**
+- Password Verification or Facial Recognition Unlock
+- Failed Attempt Limit (Up to 5)
+- Automatic Session Lock Upon Timeout
+
+**Data Display Area:**
+- **Historical Rule History**
+- Rule Change Timeline
+- Rule Enforcement/Expiration Records
+- Rule Change Reasons
+
+- **Data History**
+- Sensor Data Trend Charts (Temperature, Lighting, Motion, etc.)
+- Lighting Usage Pattern Analysis
+- Energy Consumption Statistics Report
+- Data Retention Policy: Automatically Delete Historical Data More Than One Year Old
+
+- **Export Function**
+- Supports Data Export to CSV/PDF
+- Download Data for Customized Time Ranges
+
+---
+
+### Page 3: Renew the Rules
+**Default Page - Smart Rule Management Center**
+
+**Main Display Area:**
+- **Currently Effective Rules**
+- Rule Content Detailed Description
+- Last Update Timestamp
+- Rule Enforcement Status Indicator
+
+- **Rule Update Process**
+- "Renew" button triggers intelligent rule update
+- A floating window displays the "AI Brain Thinking Process"
+- Visualize the thinking process:
+
+```
+Step 1: Analyze environmental data from the past week...
+Step 2: Identify user behavior patterns...
+Step 3: Evaluate the effectiveness of current rules...
+Step 4: Generate optimization recommendations...
+Step 5: Develop new rule strategies...
+```
+- Real-time display of thinking progress and intermediate conclusions
+
+- **Rule Confirmation**
+- Displays a comparison of the new and old rules
+- User confirms or rejects the new rule
+- Manually adjust the AI-recommended rules
+
+---Note: This is a local algorithm model (no specific model has been determined yet) and does not require an internet connection.
+
+### Page 4: Link to Your Mobile App
+**Device Binding Management**
+
+**Connection Status Display:**
+- List of currently bound devices
+- Device name, connection time, last active time
+- Connection method identifier (Bluetooth/Wi-Fi)
+
+**Binding Limit Management:**
+- Maximum number of bound devices: 2 devices
+- Binding Operations:
+- Add new device button
+- Remove bound devices
+- Device rename function
+
+**Connection Method Options:**
+- Bluetooth pairing connection
+- QR code scanning connection
+- Manual device code entry connection
+
+**Connection Status Monitoring:**
+- Real-time connection quality indicator
+- Automatic reconnection mechanism after disconnection
+- Device offline notification
+
+---
+
+### Page 5: Settings (System Settings)
+**Personalized Configuration Center**
+
+**Voice Interaction Settings:**
+- **Automatic Voice Announcement**
+- Main Switch: Enable/disable voice announcement
+- Announcement Scenario Selection:
+- Announcement when rules are updated
+- Announcements for device status changes
+- Announcements for abnormal alarms
+- Voice volume adjustment
+- Voice speed settings
+
+- **Voice recognition settings**
+- Automatic user voice recognition and response
+- Voice wake-up word settings
+- Voice command sensitivity adjustment
+- Voice feedback confirmation switch
+
+**Account & Security:**
+- Profile management
+- Username and avatar settings
+- Contact information updates
+- Password management
+- Change login password
+- Password strength requirements settings
+- Two-factor authentication options
+
+**System Preferences:**
+- Theme settings (light and dark mode)
+- Notification preferences
+- Automatic data backup options
+- System log viewing
+
+---
+
+### Global Features
+- **Thought log**: All AI decisions must be accompanied by a thought process explanation
+- **Voice guidance**: Key actions receive voice prompts and confirmations
+- **State persistence**: User settings and preferences are saved locally
+- **Responsive Design**: Adapts to desktop and mobile displays
+
+This design clarifies the core functionality and user interaction flow of each page, providing a clear framework for code implementation.

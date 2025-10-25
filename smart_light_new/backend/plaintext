@@ -1,0 +1,14 @@
+smart_light_new/
+├── backend/                    # 新增后端目录
+│   ├── data/                   # 数据文件目录
+│   │   ├── training_data.csv   # 已有训练数据
+│   │   └── detection_log.csv   # 检测结果
+│   ├── model4.py               # 已有训练好的模型
+│   ├── data_collector.py       # 数据采集脚本 
+│   ├── data_collector.py       # 已有数据收集脚本
+│   ├── app.py                  # Flask后端服务（之前创建的）
+│   ├── models.py               # 数据库模型（之前创建的）
+│   └── instance/               # SQLite数据库
+├── index.html
+├── styles.css
+└── script.js

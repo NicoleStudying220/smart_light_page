@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Lumen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 欢迎页面 -->
+    <div id="welcome-page" class="page active">
+        <div class="welcome-container">
+            <h1>🏠 Intelligent lighting control system</h1>
+            <p>Welcome to the Smart Lighting Control Center</p>
+            <button class="start-btn" onclick="showMainApp()">Get Started</button>
+        </div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div id="main-app" class="page">
+        <!-- 顶部导航栏 -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>🏠 Intelligent lighting control</h2>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-page="light-status">Lighting status</button>
+                <button class="nav-btn" data-page="history-data">Historical data</button>
+                <button class="nav-btn" data-page="renew-rules">Rule Updates</button>
+                <button class="nav-btn" data-page="mobile-link">Mobile connectivity</button>
+                <button class="nav-btn" data-page="settings">System Settings</button>
+            </div>
+        </nav>
+
+        <!-- 页面内容区域 -->
+        <main class="main-content">
+            <!-- 页面1: 灯光状态检查 -->
+            <div id="light-status" class="page-content active">
+                <h3>💡 Lighting status control</h3>
+                
+                <!-- 全局控制面板 -->
+                <div class="control-panel">
+                    <h4>Global Control</h4>
+                    <div class="global-controls">
+                        <button class="control-btn power-save" onclick="togglePowerSave()">
+                            <span class="btn-icon">🔋</span>
+                            <span class="btn-text">Power saving mode</span>
+                        </button>
+                        <button class="control-btn all-off" onclick="turnOffAllLights()">
+                            <span class="btn-icon">🔴</span>
+                            <span class="btn-text">Close All</span>
+                        </button>
+                        <button class="control-btn all-on" onclick="turnOnAllLights()">
+                            <span class="btn-icon">🟢</span>
+                            <span class="btn-text">Open All</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 单个灯光控制 -->
+                <div class="lights-grid" id="lights-grid">
+                    <!-- 灯光项目将通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 状态显示 -->
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">Total power consumption:</span>
+                        <span class="status-value" id="total-power">0W</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Run time:</span>
+                        <span class="status-value" id="runtime">0小时</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Abnormal status:</span>
+                        <span class="status-value" id="error-status">Normal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面2: 历史规则与数据 -->
+            <div id="history-data" class="page-content">
+                <h3>📊 Historical rules and data</h3>
+                
+                <!-- 密码验证区域 -->
+                <div id="auth-section" class="auth-section">
+                    <div class="auth-form">
+                        <h4>Authentication</h4>
+                        <input type="password" id="password-input" placeholder="Please enter your password" maxlength="20">
+                        <button onclick="authenticate()">verify</button>
+                        <div id="auth-error" class="error-message"></div>
+                        <div id="attempts-left" class="attempts-info">Remaining attempts: 5</div>
+                    </div>
+                </div>
+
+                <!-- 数据展示区域 -->
+                <div id="data-section" class="data-section hidden">
+                    <div class="data-tabs">
+                        <button class="tab-btn active" data-tab="rules">Historical rules</button>
+                        <button class="tab-btn" data-tab="sensors">Sensor data</button>
+                        <button class="tab-btn" data-tab="energy">Energy consumption statistics</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="rules-tab" class="tab-panel active">
+                            <h4>Rule Change Record</h4>
+                            <div class="rules-timeline" id="rules-timeline">
+                                <!-- 规则记录将通过JavaScript生成 -->
+                            </div>
+                        </div>
+
+                        <div id="sensors-tab" class="tab-panel">
+                            <h4>Sensor data trends</h4>
+                            <div class="chart-container">
+                                <canvas id="sensor-chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="energy-tab" class="tab-panel">
+                            <h4>Energy consumption statistics report</h4>
+                            <div class="energy-stats" id="energy-stats">
+                                <!-- 能耗统计将通过JavaScript生成 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-section">
+                        <button onclick="exportData('csv')">Export CSV</button>
+                        <button onclick="exportData('pdf')">Export PDF</button>
+                    </div>
+                </div>
+                <!-- Model rules area: AI/model generated rules and explanations -->
+                <div id="model-rule" class="data-section">
+                    <h4>Model-generated Rules</h4>
+                    <p>Display rules suggested by the model here, including confidence scores and short explanations. This section can be populated via JavaScript after the user authenticates.</p>
+                    <!-- Example placeholders; replace or populate dynamically -->
+                    <div class="model-summary" id="model-summary">
+                        <p>No model suggestions yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面3: 规则更新 -->
+            <div id="renew-rules" class="page-content">
+                <h3>🤖 Smart rule updates</h3>
+                
+                <!-- 当前规则显示 -->
+                <div class="current-rules">
+                    <h4>Current effective rules</h4>
+                    <div class="rule-card" id="current-rule">
+                        <div class="rule-content">
+                            <p>Default rule: Automatically adjust light brightness based on calculation results</p>
+                            <p>Last updated: 2024-01-01 10:00:00(Exp.)</p>
+                            <div class="rule-status active">In effect</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI思考过程 -->
+                <div class="ai-thinking" id="ai-thinking">
+                    <h4>AI brain thinking process</h4>
+                    <button class="renew-btn" onclick="startRuleRenewal()">🔄 Update rules</button>
+                    
+                    <div class="thinking-process hidden" id="thinking-process">
+                        <div class="thinking-step" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-content">Analysis of environmental data in the past week...</div>
+                            <div class="step-progress"></div>
+                        </div>
+                        <div class="thinking-step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-content">Identifying user behavior patterns...</div>
+                            <div class="step-progress"></div>
+                        </div>
+                        <div class="thinking-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-content">Evaluate the effectiveness of current rules...</div>
+                            <div class="step-progress"></div>
+                        </div>
+                        <div class="thinking-step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-content">Generate optimization suggestions...</div>
+                            <div class="step-progress"></div>
+                        </div>
+                        <div class="thinking-step" data-step="5">
+                            <div class="step-number">5</div>
+                            <div class="step-content">Develop new rules and strategies...</div>
+                            <div class="step-progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 规则确认 -->
+                <div class="rule-confirmation hidden" id="rule-confirmation">
+                    <h4>New rules confirmed</h4>
+                    <div class="rule-comparison">
+                        <div class="old-rule">
+                            <h5>Old rules</h5>
+                            <p>Automatically adjust light brightness according to time</p>
+                        </div>
+                        <div class="new-rule">
+                            <h5>New rules</h5>
+                            <p>Intelligent adjustment based on ambient light and user habits</p>
+                        </div>
+                    </div>
+                    <div class="confirmation-buttons">
+                        <button class="confirm-btn" onclick="confirmRule(true)">Confirm application</button>
+                        <button class="reject-btn" onclick="confirmRule(false)">Reject</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面4: 移动应用连接 -->
+            <div id="mobile-link" class="page-content">
+                <h3>📱 Mobile app connection</h3>
+                
+                <!-- 连接状态显示 -->
+                <div class="connection-status">
+                    <h4>Bound device</h4>
+                    <div class="devices-list" id="devices-list">
+                        <!-- 设备列表将通过JavaScript生成 -->
+                    </div>
+                </div>
+
+                <!-- 绑定管理 -->
+                <div class="binding-management">
+                    <h4>Device Binding</h4>
+                    <div class="binding-options">
+                        <button class="bind-btn" onclick="showBindModal('bluetooth')">
+                            <span class="btn-icon">📶</span>
+                            <span class="btn-text">Bluetooth pairing</span>
+                        </button>
+                        <button class="bind-btn" onclick="showBindModal('qr')">
+                            <span class="btn-icon">📱</span>
+                            <span class="btn-text">QR code scanning</span>
+                        </button>
+                        <button class="bind-btn" onclick="showBindModal('manual')">
+                            <span class="btn-icon">🔢</span>
+                            <span class="btn-text">Manual Input</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 绑定模态框 -->
+                <div id="bind-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeBindModal()">&times;</span>
+                        <h4 id="modal-title">Device Binding</h4>
+                        <div id="modal-body">
+                            <!-- 模态框内容将通过JavaScript生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面5: 系统设置 -->
+            <div id="settings" class="page-content">
+                <h3>⚙️ System Settings</h3>
+                
+                <div class="settings-sections">
+                    <!-- 语音交互设置 -->
+                    <div class="settings-section">
+                        <h4>🎤 Voice interaction settings</h4>
+                        
+                        <div class="setting-group">
+                            <label class="setting-label">
+                                <input type="checkbox" id="voice-enabled" checked>
+                                <span class="checkmark"></span>
+                                Enable voice announcement
+                            </label>
+                        </div>
+
+                        <div class="setting-group">
+                            <label>Broadcast scene selection:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="voice-rules" checked> Announce when rules are updated</label>
+                                <label><input type="checkbox" id="voice-status" checked> Notify when device status changes</label>
+                                <label><input type="checkbox" id="voice-alerts" checked> Broadcast when abnormal alarm occurs</label>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="voice-volume">Voice volume: <span id="volume-value">50</span>%</label>
+                            <input type="range" id="voice-volume" min="0" max="100" value="50" oninput="updateVolume(this.value)">
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="voice-speed">Speech speed: <span id="speed-value">normal</span></label>
+                            <select id="voice-speed" onchange="updateSpeed(this.value)">
+                                <option value="slow">Slow</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 账户与安全 -->
+                    <div class="settings-section">
+                        <h4>👤 Account and Security</h4>
+                        
+                        <div class="setting-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" value="用户">
+                        </div>
+
+                        <div class="setting-group">
+                            <label for="password">Change Password:</label>
+                            <input type="password" id="password" placeholder="新密码">
+                        </div>
+
+                        <div class="setting-group">
+                            <label class="setting-label">
+                                <input type="checkbox" id="two-factor">
+                                <span class="checkmark"></span>
+                                Enable two-factor authentication
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 系统偏好 -->
+                    <div class="settings-section">
+                        <h4>🎨 System Preferences</h4>
+                        
+                        <div class="setting-group">
+                            <label for="theme">Theme settings:</label>
+                            <select id="theme" onchange="changeTheme(this.value)">
+                                <option value="light" selected>Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="auto">Automatic</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-group">
+                            <label class="setting-label">
+                                <input type="checkbox" id="notifications" checked>
+                                <span class="checkmark"></span>
+                                Enable Notifications
+                            </label>
+                        </div>
+
+                        <div class="setting-group">
+                            <label class="setting-label">
+                                <input type="checkbox" id="auto-backup" checked>
+                                <span class="checkmark"></span>
+                                Automatically back up data
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button onclick="saveSettings()">Save settings</button>
+                    <button onclick="resetSettings()">Restore Defaults</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
