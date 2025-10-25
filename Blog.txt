@@ -1,0 +1,153 @@
+**Smart Lighting System: Local Deployment Research Log**
+
+**Overview**  
+This document details the iterative development of a locally deployed smart lighting system, with a focus on hardware setup, sensor integration, data collection, model training, and system integration. The project is grounded in the principle of "internet equality," aiming to build a low-threshold, privacy-preserving smart home system that operates entirely without cloud dependencies.
+
+---
+
+**September 23, 2024: Initial Hardware Deployment Challenges**  
+- **Objective:** Set up Raspberry Pi 5 as the local computing core for the smart lighting system.  
+- **Key Issues & Resolutions:**  
+  - Procured missing components: microSD card and Ethernet cable.  
+  - Home Assistant installation failed via vendor tutorial; successfully imaged SD card using alternative guidance from AI tools.  
+  - Initial deployment issues were later traced to a defective Raspberry Pi unit.  
+- **Research Insight:** Early hardware validation is essential to avoid delays; vendor guides may lack context-specific deployment instructions.
+
+---
+
+**September 24, 2024: Hardware Replacement & Preliminary Model Research**  
+- **Hardware Update:**  
+  - Remote diagnostics confirmed original Raspberry Pi was faulty; a replacement was ordered via Amazon.  
+  - Delivery delayed due to incorrect address entry.  
+- **Model Exploration:**  
+  - Selected LightGBM for lighting habit learning based on AI recommendation.  
+  - Generated synthetic test data and initial code using DeepSeek and Cursor.  
+  - Drafted technical requirements (`tec_requirements.txt`) and produced executable code for validation.  
+- **Research Insight:** Parallel modeling work during hardware procurement minimizes downtime; clear technical specs improve AI-generated code reliability.
+
+---
+
+**September 25, 2024: Raspberry Pi Setup & Sensor Connection**  
+- **Hardware Setup:**  
+  - Resolved microSD compatibility by switching to a high-speed card.  
+  - Enabled SSH access via:  
+    ```bash
+    ssh nicole@192.168.1.185
+    sudo raspi-config  # Enable VNC under Interface Options
+    sudo shutdown -h now
+    ```  
+- **Sensor Testing:**  
+  - Photosensitive sensor initially unresponsive; identified that analog output (AO) requires an ADC (e.g., PCF8591) for Raspberry Pi compatibility.  
+- **Research Insight:** SD card performance impacts deployment success; sensor signal type must match GPIO capabilities.
+
+---
+
+**September 26, 2024: Multi-Sensor Integration & Compatibility Resolution**  
+- **Sensors Connected via Raspberry Pi Pico 2:**  
+  - PIR Motion: VCC→5V, GND→GND, OUT→GPIO4  
+  - DHT11/DHT22 Temp-Humidity: VCC→3.3V, GND→GND, DATA→GPIO22  
+  - Sound Sensor: VCC→5V, GND→GND, OUT→GPIO17  
+  - Photosensitive: VCC→3.3V, GND→GND, OUT→GPIO27  
+- **Compatibility Breakthrough:**  
+  - Initial unresponsiveness resolved by recognizing sensors were designed for Pico 2; used Pico 2 as intermediary to Raspberry Pi 5.  
+- **Research Insight:** Cross-hardware compatibility is a critical and often overlooked barrier in DIY IoT systems.
+
+---
+
+**September 27–28, 2024: Sensor Validation & Data Logging Setup**  
+- **Sensor Verification:**  
+  - Wrote and executed test scripts in Thonny IDE for each sensor.  
+  - Confirmed functionality of temperature-humidity, sound, light, and RGB strip.  
+  - Installed libraries (e.g., `neopixel`) directly to Pico 2 via Thonny.  
+- **Data Collection Ready:**  
+  - Established serial communication between Pico 2 and Raspberry Pi 5.  
+  - Initiated overnight logging using:  
+    ```bash
+    minicom -b 115200 -D /dev/ttyACM0 -C pico_data.log
+    ```  
+- **Research Insight:** Direct library installation on microcontrollers avoids cross-system issues; serial configuration is key to stable data flow.
+
+---
+
+**September 29–30, 2024: Data Collection & Environment Setup**  
+- **Data Logging Resolution:**  
+  - Fixed transmission issue by saving `main.py` directly to Pico 2.  
+  - Successfully collected overnight sensor data into `/home/nicole/pico_data.log`.  
+- **Project Setup:**  
+  - Created Python virtual environment (`smart_light_venv`) for dependency isolation.  
+  - Completed ethical approval documentation; currently using personal data with plans for diverse user testing.  
+- **Research Insight:** File placement on microcontrollers is critical for autonomy; virtual environments ensure reproducible builds.
+
+---
+
+**October 1–7, 2024: Front-End Design & Project Refocus**  
+- **Interface Development:**  
+  - Designed mobile and web UI based on technical specs; initial code generated via Cursor.  
+  - Localized Chinese-language interface to English for broader accessibility.  
+  - Produced hand-drawn sketches and low-fidelity app prototypes.  
+- **Theoretical Alignment:**  
+  - Refined research focus to emphasize "internet equality," addressing opaque data permissions and complex UIs as digital divides.  
+  - Finalized two-week plan: data collection, model selection, and end-to-end refinement.  
+- **Research Insight:** Language localization supports inclusivity; aligning technical work with theoretical frameworks strengthens impact.
+
+---
+
+**October 8–13, 2024: Model Selection & Hardware Refinement**  
+- **Model Analysis:**  
+  - Evaluated 10 ML models based on speed, accuracy, interpretability, and edge compatibility.  
+  - Selected **Isolation Forest** (unsupervised, efficient, ideal for anomaly detection).  
+  - Rejected neural networks (too heavy) and supervised models (require labeled data).  
+  - Resolved import errors by simplifying package structure.  
+- **Hardware Updates:**  
+  - Added external camera for motion recognition (YOLO), tested with:  
+    ```bash
+    ffplay -f v4l2 -video_size 640x480 -framerate 15 /dev/video0
+    ```  
+  - Replaced malfunctioning sound and light sensors.  
+- **Research Insight:** Anomaly detection fits smart lighting well—requires only normal data and runs efficiently on edge devices.
+
+---
+
+**October 14–20, 2024: Behavioral Data Collection & Model Training**  
+- **7-Day Activity Log:**
+
+| Date     | Wake-Up | Light On | Curtain Open | Night Mode | Sleep  |
+|----------|---------|----------|--------------|------------|--------|
+| Oct 14   | 11:00   | 11:00    | 11:00        | 00:53      | 01:41  |
+| Oct 15   | 11:11   | 11:11    | 11:11        | 23:44      | 01:21  |
+| Oct 16   | 11:25   | 11:25    | 11:25        | 00:26      | 01:14  |
+| Oct 17   | 10:21   | 10:21    | 10:21        | 00:15      | 01:29  |
+| Oct 18   | 09:56   | 09:56    | 09:56        | 00:26      | 01:11  |
+| Oct 19   | 11:25   | 11:25    | 11:25        | 00:24      | 05:13  |
+| Oct 20   | 11:10   | 11:10    | 11:10        | —          | —      |
+
+- **Model Training:**  
+  - Installed dependencies:  
+    ```bash
+    python3-pip python3-dev libopenblas-dev scikit-learn pandas joblib keras
+    ```  
+  - Trained Isolation Forest on sensor/behavioral data; output saved as `.pkl`.  
+- **Hardware Setback:**  
+  - RGB strip testing delayed due to incompatible transformer; substituted with software light control.  
+- **Research Insight:** Long-term behavioral logging reveals real usage patterns; model selection must prioritize edge constraints.
+
+---
+
+**October 21–25, 2024: System Integration & Final Refinements**  
+- **Integration Status:**  
+  - Connected back-end (Raspberry Pi 5 + trained model) with front-end web interface.  
+  - Validated: light control, password-protected data access, real-time sensor visualization.  
+- **Outstanding Tasks:**  
+  - Resolve RGB strip transformer compatibility.  
+  - Finalize model output rules for automated adjustments.  
+  - Complete research paper and documentation.  
+- **Research Insight:** End-to-end integration requires iterative hardware-software testing; password protection supports data sovereignty.
+
+---
+
+**Key Research Insights**  
+1. **Hardware Synergy:** Using Raspberry Pi 5 with Pico 2 resolves compatibility issues, enabling cost-effective local deployment.  
+2. **Edge-Optimized AI:** Isolation Forest is ideal for smart lighting—unsupervised, efficient, and resource-aware.  
+3. **Inclusive Design:** English interfaces, simple controls, and local processing reduce technical and accessibility barriers.  
+4. **Iterative Debugging:** Early hardware defects, sensor issues, and code errors were resolved through systematic testing.  
+5. **Equity Alignment:** Local processing, transparent data handling, and low-threshold operation support broader digital inclusion.
